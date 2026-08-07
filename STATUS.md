@@ -30,29 +30,29 @@ kind: status
 
 ## 지금 약한 것 (top 5 — 세션은 여기서 시작)
 > 전체는 [[mastery.md]]. 아직 `설명가능`이 아닌 것부터.
-1. L이 아니라 action S가 경로 전체 x(t)를 입력받는 functional이라는 구분을 처음에는 혼동했으나 교정함
-2. stationary action을 minimum이라고 표현하는 경향이 있어 extremum/stationary라는 표현을 계속 확인할 필요가 있음
-3. Euler-Lagrange 식에 L=T-V를 대입할 때 potential 항의 부호를 한 번 놓침
-4. 극좌표에서 p_theta=mr^2 theta'의 r^2 인자를 처음에는 놓침
-5. 처음에는 L을 경로 전체의 함수로 잘못 표현했으나 이후 L은 x, x', t의 function이고 S가 경로 x(t)의 functional임을 바로잡음
+1. stationary action을 minimum과 구분해서 표현하기
+2. Lagrangian variation에서 x→x+εη일 때 xdot→xdot+εηdot가 되는 관계를 즉시 떠올리기
+3. potential 항의 부호를 포함해 Euler-Lagrange 식에 대입할 때 부호 실수 줄이기
+4. 극좌표에서 p_theta=mr^2 theta_dot의 r^2 계수 정확히 기억하기
+5. cyclic coordinate와 symmetry, conservation law의 연결을 Noether theorem 관점으로 확장하기
 
 ## 다음 복습 질문 (top 5 — 세션 시작 시 1~2개 예측용)
 > 다음 세션에서 다시 물을 것. 러너가 채워 나간다.
-1. Newtonian mechanics와 Lagrangian mechanics의 local/global 관점 차이를 자기 말로 다시 설명할 수 있는가?
-2. 왜 η(t_i)=η(t_f)=0으로 두는가?
-3. 왜 모든 허용 가능한 η(t)에 대해 ∫f(t)η(t)dt=0이면 f(t)=0이어야 하는가?
-4. generalized coordinate가 cyclic coordinate일 때 왜 그 conjugate momentum이 보존되는가?
-5. theta가 cyclic coordinate인 중심력 문제에서 p_theta가 각운동량과 어떻게 연결되는가?
+1. 왜 η(t_i)=η(t_f)=0이어야 하는가?
+2. 왜 모든 허용 가능한 η(t)에 대해 ∫f(t)η(t)dt=0이면 f(t)=0이어야 하는가?
+3. L=1/2 m xdot^2 - V(x)에서 Euler-Lagrange equation이 Newton의 제2법칙을 어떻게 복원하는가?
+4. 극좌표 중심력 문제에서 p_theta는 무엇이며 왜 보존되는가?
+5. L이 theta에 의존하지 않는다는 사실을 symmetry와 conservation law로 어떻게 연결할 수 있는가?
 
 ## 최근 궤적 (러너가 갱신)
 
-- 2026-08-07 · 양자역학 Chapter 2 — Newtonian vs Lagrangian → [daily/2026-08-07-chapter-2-newtonian-vs-lagrangian.md](daily/2026-08-07-chapter-2-newtonian-vs-lagrangian.md)
 - 2026-08-07 · 양자역학 Chapter 2 — Classical Mechanics → [daily/2026-08-07-chapter-2-classical-mechanics.md](daily/2026-08-07-chapter-2-classical-mechanics.md)
 - 2026-08-07 · 양자역학 Chapter 2 — Classical Mechanics / Lagrangian → [daily/2026-08-07-chapter-2-classical-mechanics-lagrangian.md](daily/2026-08-07-chapter-2-classical-mechanics-lagrangian.md)
 - 2026-08-07 · 양자역학 Chapter 2 — Lagrangian mechanics → [daily/2026-08-07-chapter-2-lagrangian-mechanics-4.md](daily/2026-08-07-chapter-2-lagrangian-mechanics-4.md)
 - 2026-08-07 · Shankar Chapter 2 Classical Mechanics → [daily/2026-08-07-shankar-chapter-2-classical-mechanics-2.md](daily/2026-08-07-shankar-chapter-2-classical-mechanics-2.md)
 - 2026-08-07 · Shankar Chapter 2 Classical Mechanics - Lagrangian → [daily/2026-08-07-shankar-chapter-2-classical-mechanics-lagrangian.md](daily/2026-08-07-shankar-chapter-2-classical-mechanics-lagrangian.md)
 - 2026-08-07 · Shankar Chapter 2 — Classical Mechanics 복습 및 이해 점검 → [daily/2026-08-07-shankar-chapter-2-classical-mechanics-5.md](daily/2026-08-07-shankar-chapter-2-classical-mechanics-5.md)
+- 2026-08-07 · Shankar Chapter 2 — Lagrangian Mechanics 기초 이해 점검 → [daily/2026-08-07-shankar-chapter-2-lagrangian-mechanics.md](daily/2026-08-07-shankar-chapter-2-lagrangian-mechanics.md)
 
 ## 세션 진행 프로토콜 (러너가 따르는 대본)
 **① 목표 → ② 예측(내가 먼저 자기 말로) → ③ 설명·교정(오개념을 근거와 함께) → ④ 퀴즈/적용 → ⑤ 채점·기록.**
