@@ -30,17 +30,19 @@ kind: status
 
 ## 지금 약한 것 (top 5 — 세션은 여기서 시작)
 > 전체는 [[mastery.md]]. 아직 `설명가능`이 아닌 것부터.
-1. L과 S의 역할을 처음에는 혼동했으나, L은 x, x', t의 function이고 S는 경로 x(t)의 functional이라는 구분으로 교정함.
-2. stationary action을 minimum이라고 표현하는 경향이 있어, extremum/stationary와 minimum의 차이를 계속 확인할 필요가 있음.
-3. Euler-Lagrange equation에 L=T-V를 대입할 때 ∂L/∂x의 부호를 한 번 놓쳤음.
-4. canonical momentum을 실제 generalized coordinate에서 계산하고 cyclic coordinate 및 보존법칙과 연결하는 적용 확인이 필요함.
-5. L과 action S의 function/functional 구분은 교정 후 이해함. 정확한 표기는 S가 x라는 수가 아니라 경로 함수 x(t)를 입력받는 functional이라는 점.
+1. 처음에는 L을 경로 전체의 함수로 잘못 표현했으나 이후 L은 x, x', t의 function이고 S가 경로 x(t)의 functional임을 바로잡음
+2. stationary action을 minimum으로 표현하는 습관이 있어 extremum/stationary와 minimum의 차이를 계속 점검할 필요가 있음
+3. Euler-Lagrange equation을 L=T-V에 대입할 때 potential 항의 부호를 한 번 놓침
+4. 극좌표에서 p_theta 계산 시 r^2 계수를 놓침
+5. L과 S의 역할을 처음에는 혼동했으나, L은 x, x', t의 function이고 S는 경로 x(t)의 functional이라는 구분으로 교정함.
 
 ## 다음 복습 질문 (top 5 — 세션 시작 시 1~2개 예측용)
 > 다음 세션에서 다시 물을 것. 러너가 채워 나간다.
-1. 극좌표에서 q=θ를 잡았을 때 p_θ=∂L/∂θdot가 왜 각운동량과 일치하는가?
-2. L이 어떤 generalized coordinate q에 직접 의존하지 않을 때 p_q가 왜 보존되는가?
-3. stationary action은 왜 반드시 minimum을 뜻하지 않는가?
+1. Newtonian mechanics의 local 관점과 Lagrangian mechanics의 global 관점을 자기 말로 설명하라.
+2. 왜 L은 function이고 S는 functional인가?
+3. 왜 variation η(t)는 양 끝점에서 0이어야 하는가?
+4. 왜 임의의 η(t)에 대해 ∫f(t)η(t)dt=0이면 f(t)=0이어야 하는가?
+5. L=(1/2)m x_dot^2 - V(x)에서 Euler-Lagrange equation이 Newton의 제2법칙을 어떻게 복원하는가?
 
 ## 최근 궤적 (러너가 갱신)
 
@@ -50,7 +52,7 @@ kind: status
 - 2026-08-07 · 양자역학 Chapter 2 — Lagrangian mechanics → [daily/2026-08-07-chapter-2-lagrangian-mechanics-4.md](daily/2026-08-07-chapter-2-lagrangian-mechanics-4.md)
 - 2026-08-07 · Shankar Chapter 2 Classical Mechanics → [daily/2026-08-07-shankar-chapter-2-classical-mechanics-2.md](daily/2026-08-07-shankar-chapter-2-classical-mechanics-2.md)
 - 2026-08-07 · Shankar Chapter 2 Classical Mechanics - Lagrangian → [daily/2026-08-07-shankar-chapter-2-classical-mechanics-lagrangian.md](daily/2026-08-07-shankar-chapter-2-classical-mechanics-lagrangian.md)
-- 2026-08-07 · Shankar Chapter 2 — Classical Mechanics 복습 및 이해 점검 → [daily/2026-08-07-shankar-chapter-2-classical-mechanics-3.md](daily/2026-08-07-shankar-chapter-2-classical-mechanics-3.md)
+- 2026-08-07 · Shankar Chapter 2 — Classical Mechanics 복습 및 이해 점검 → [daily/2026-08-07-shankar-chapter-2-classical-mechanics-4.md](daily/2026-08-07-shankar-chapter-2-classical-mechanics-4.md)
 
 ## 세션 진행 프로토콜 (러너가 따르는 대본)
 **① 목표 → ② 예측(내가 먼저 자기 말로) → ③ 설명·교정(오개념을 근거와 함께) → ④ 퀴즈/적용 → ⑤ 채점·기록.**
