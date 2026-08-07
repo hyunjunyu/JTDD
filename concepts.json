@@ -1,0 +1,93 @@
+{
+ "concepts": [],
+ "drills": [
+  {
+   "id": "lagrangian-vs-action-function-functional",
+   "label": "lagrangian-vs-action-function-functional",
+   "domain": "미분류",
+   "state": "can_explain",
+   "importance": "L",
+   "prereq": [],
+   "sources": [],
+   "note": "",
+   "why_drill": "어휘장 꼴(단어=뜻)이고 선수관계가 없음"
+  },
+  {
+   "id": "fixed-endpoint-variation",
+   "label": "fixed-endpoint-variation",
+   "domain": "미분류",
+   "state": "can_explain",
+   "importance": "저",
+   "prereq": [],
+   "sources": [],
+   "note": "",
+   "why_drill": "어휘장 꼴(단어=뜻)이고 선수관계가 없음"
+  },
+  {
+   "id": "stationary-action",
+   "label": "stationary-action",
+   "domain": "미분류",
+   "state": "memorized",
+   "importance": "S",
+   "prereq": [],
+   "sources": [],
+   "note": "",
+   "why_drill": "어휘장 꼴(단어=뜻)이고 선수관계가 없음"
+  },
+  {
+   "id": "variation-of-velocity",
+   "label": "variation-of-velocity",
+   "domain": "미분류",
+   "state": "memorized",
+   "importance": "X",
+   "prereq": [],
+   "sources": [],
+   "note": "",
+   "why_drill": "어휘장 꼴(단어=뜻)이고 선수관계가 없음"
+  },
+  {
+   "id": "fundamental-lemma-of-variations",
+   "label": "fundamental-lemma-of-variations",
+   "domain": "미분류",
+   "state": "can_explain",
+   "importance": "Η",
+   "prereq": [],
+   "sources": [],
+   "note": "",
+   "why_drill": "어휘장 꼴(단어=뜻)이고 선수관계가 없음"
+  },
+  {
+   "id": "newton-equation-from-euler-lagrange",
+   "label": "newton-equation-from-euler-lagrange",
+   "domain": "미분류",
+   "state": "memorized",
+   "importance": "D",
+   "prereq": [],
+   "sources": [],
+   "note": "",
+   "why_drill": "어휘장 꼴(단어=뜻)이고 선수관계가 없음"
+  },
+  {
+   "id": "canonical-momentum",
+   "label": "canonical-momentum",
+   "domain": "미분류",
+   "state": "memorized",
+   "importance": "일",
+   "prereq": [],
+   "sources": [],
+   "note": "",
+   "why_drill": "어휘장 꼴(단어=뜻)이고 선수관계가 없음"
+  },
+  {
+   "id": "cyclic-coordinate-angular-momentum-conservation",
+   "label": "cyclic-coordinate-angular-momentum-conservation",
+   "domain": "미분류",
+   "state": "can_explain",
+   "importance": "각",
+   "prereq": [],
+   "sources": [],
+   "note": "",
+   "why_drill": "어휘장 꼴(단어=뜻)이고 선수관계가 없음"
+  }
+ ]
+}
