@@ -30,21 +30,24 @@ kind: status
 
 ## 지금 약한 것 (top 5 — 세션은 여기서 시작)
 > 전체는 [[mastery.md]]. 아직 `설명가능`이 아닌 것부터.
-1. Shankar Chapter 1 및 Chapter 2 이전 내용의 이해도가 확실하지 않음
-2. Chapter 2 Lagrangian mechanics를 공식 암기가 아니라 원리와 의미까지 설명할 수 있는지 점검 필요
-3. 현재 활성 트랙과 읽는 중인 논문이 아직 설정되지 않음
+1. Lagrangian L(q, qdot, t)와 action S[x(t)] functional의 구분이 아직 불명확함.
+2. Euler-Lagrange 방정식이 적용되는 좌표는 '다른 직교 좌표계'에 한정되지 않고 일반화 좌표이며, 이 점을 정교화할 필요가 있음.
+3. Newton 방식의 한 스텝 전개에서 acceleration 항과 근사 차수의 의미를 더 정확히 이해할 필요가 있음.
+4. Shankar Chapter 1 및 Chapter 2 이전 내용의 이해도가 확실하지 않음
+5. Chapter 2 Lagrangian mechanics를 공식 암기가 아니라 원리와 의미까지 설명할 수 있는지 점검 필요
 
 ## 다음 복습 질문 (top 5 — 세션 시작 시 1~2개 예측용)
 > 다음 세션에서 다시 물을 것. 러너가 채워 나간다.
-1. Newtonian mechanics와 Lagrangian mechanics는 같은 운동을 어떻게 서로 다른 관점에서 기술하는가?
-2. action과 stationary-action principle의 의미를 자기 말로 설명할 수 있는가?
-3. Euler–Lagrange equation이 Newton의 운동방정식을 어떻게 재현하는가?
+1. L(q, qdot, t)와 S[q(t)]의 입력은 각각 무엇이며, 둘 중 무엇이 functional인가?
+2. Euler-Lagrange 방정식이 직교좌표계에만 국한되지 않는 이유를 generalized coordinate 관점에서 설명할 수 있는가?
+3. Newtonian local description과 Lagrangian global description의 차이를 초기값 문제와 경계값/경로 비교 관점에서 설명할 수 있는가?
 
 ## 최근 궤적 (러너가 갱신)
 
 ---
 - 2026-08-07 · 첫 실제 세션 시작 → [daily/2026-08-07-session.md](daily/2026-08-07-session.md)
 - 2026-08-07 · Shankar Chapter 2 — Classical Mechanics 복습 및 이해 점검 → [daily/2026-08-07-shankar-chapter-2-classical-mechanics.md](daily/2026-08-07-shankar-chapter-2-classical-mechanics.md)
+- 2026-08-07 · 양자역학 Chapter 2 — Newtonian vs Lagrangian → [daily/2026-08-07-chapter-2-newtonian-vs-lagrangian.md](daily/2026-08-07-chapter-2-newtonian-vs-lagrangian.md)
 
 ## 세션 진행 프로토콜 (러너가 따르는 대본)
 **① 목표 → ② 예측(내가 먼저 자기 말로) → ③ 설명·교정(오개념을 근거와 함께) → ④ 퀴즈/적용 → ⑤ 채점·기록.**
