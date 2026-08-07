@@ -1,0 +1,49 @@
+name: paper-scan
+
+# 논문 스케줄링 — `topics.yaml`의 주제로 매주 새 논문을 찾아 `papers/`에 모은다.
+#
+# 이 파일은 일부러 **얇다.** 로직은 `scripts/paper_scan_ci.py`와 `scripts/scan_papers.py`에
+# 있다. Actions의 기본 토큰은 `.github/workflows/` 를 수정할 수 없어 워크플로 파일은
+# 자동 배포되지 않는다 — 그래서 고칠 가능성이 있는 것은 전부 scripts/에 둔다.
+#
+# 서버가 없다. 각자 repo의 Actions가 공개 API(OpenAlex — 키 불필요)를 조회한다.
+# 비용 0 · LLM 토큰 0 · 계정 0.
+#
+# 경계: 이 워크플로가 쓰는 경로는 `papers/**` 뿐이다.
+
+on:
+  schedule:
+    # 매주 월요일 08:10 KST (UTC 23:10 일요일)
+    - cron: "10 23 * * 0"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  issues: write
+
+concurrency:
+  group: paper-scan
+  cancel-in-progress: false
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: 선별 로직 자체 점검 (네트워크 없음)
+        run: python3 scripts/test_scan_papers.py
+
+      - name: 수집 · 커밋 · 알림
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python3 -c "import yaml" 2>/dev/null || pip install --quiet pyyaml
+          export SYNC_DATE="$(TZ=Asia/Seoul date +%F)"
+          python3 scripts/paper_scan_ci.py
+
+      - name: 실패를 조용히 넘기지 않는다
+        if: failure()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python3 scripts/ci_notify_failure.py "논문 수집"
