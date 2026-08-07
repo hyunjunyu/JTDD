@@ -34,7 +34,7 @@ kind: status
 2. 경로 variation에서 x→x+εη일 때 xdot→xdot+εηdot 관계를 즉시 떠올리기
 3. L=T-V를 Euler–Lagrange 식에 넣을 때 potential 항의 부호 실수 줄이기
 4. 극좌표에서 p_theta=mr^2 theta_dot의 r^2 계수 정확히 기억하기
-5. Cartesian 좌표에서 cyclic coordinate를 직접 찾지 않고도 continuous symmetry로부터 conserved quantity를 유도하는 Noether theorem의 일반형을 설명하는 부분이 아직 버거움.
+5. generalized coordinate q_i를 basis 또는 직교좌표계에 한정하지 않고 이해하기
 
 ## 다음 복습 질문 (top 5 — 세션 시작 시 1~2개 예측용)
 > 다음 세션에서 다시 물을 것. 러너가 채워 나간다.
@@ -42,17 +42,17 @@ kind: status
 2. 왜 모든 허용 가능한 η(t)에 대해 ∫f(t)η(t)dt=0이면 f(t)=0이어야 하는가?
 3. L=1/2 m xdot^2 - V(x)에서 Euler-Lagrange equation이 Newton의 제2법칙을 어떻게 복원하는가?
 4. 극좌표 중심력 문제에서 p_theta는 무엇이며 왜 보존되는가?
-5. Cartesian 중심력 문제에서 x,y가 cyclic coordinate가 아닌데도 rotational symmetry가 왜 angular momentum conservation으로 이어지는가?
+5. L이 theta에 의존하지 않는다는 사실은 왜 rotational symmetry를 뜻하는가?
 
 ## 최근 궤적 (러너가 갱신)
 
-- 2026-08-07 · Shankar Chapter 2 Classical Mechanics → [daily/2026-08-07-shankar-chapter-2-classical-mechanics-2.md](daily/2026-08-07-shankar-chapter-2-classical-mechanics-2.md)
 - 2026-08-07 · Shankar Chapter 2 Classical Mechanics - Lagrangian → [daily/2026-08-07-shankar-chapter-2-classical-mechanics-lagrangian.md](daily/2026-08-07-shankar-chapter-2-classical-mechanics-lagrangian.md)
 - 2026-08-07 · Shankar Chapter 2 — Classical Mechanics 복습 및 이해 점검 → [daily/2026-08-07-shankar-chapter-2-classical-mechanics-5.md](daily/2026-08-07-shankar-chapter-2-classical-mechanics-5.md)
 - 2026-08-07 · Shankar Chapter 2 — Lagrangian Mechanics 기초 이해 점검 → [daily/2026-08-07-shankar-chapter-2-lagrangian-mechanics.md](daily/2026-08-07-shankar-chapter-2-lagrangian-mechanics.md)
 - 2026-08-07 · Shankar Chapter 2 — Lagrangian Mechanics 개념 지도 반영 → [daily/2026-08-07-shankar-chapter-2-lagrangian-mechanics-2.md](daily/2026-08-07-shankar-chapter-2-lagrangian-mechanics-2.md)
 - 2026-08-07 · Shankar Chapter 2 — Symmetry와 Conservation Law → [daily/2026-08-07-shankar-chapter-2-symmetry-conservation-law.md](daily/2026-08-07-shankar-chapter-2-symmetry-conservation-law.md)
 - 2026-08-07 · Shankar Chapter 2 — Lagrangian symmetry and Noether bridge → [daily/2026-08-07-shankar-chapter-2-lagrangian-symmetry-and-noether-bridge.md](daily/2026-08-07-shankar-chapter-2-lagrangian-symmetry-and-noether-bridge.md)
+- 2026-08-07 · Shankar Chapter 2 — Lagrangian Mechanics에서 Symmetry와 Conservation까지 → [daily/2026-08-07-shankar-chapter-2-lagrangian-mechanics-symmetry-conservation.md](daily/2026-08-07-shankar-chapter-2-lagrangian-mechanics-symmetry-conservation.md)
 
 ## 세션 진행 프로토콜 (러너가 따르는 대본)
 **① 목표 → ② 예측(내가 먼저 자기 말로) → ③ 설명·교정(오개념을 근거와 함께) → ④ 퀴즈/적용 → ⑤ 채점·기록.**
