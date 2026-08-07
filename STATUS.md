@@ -30,18 +30,19 @@ kind: status
 
 ## 지금 약한 것 (top 5 — 세션은 여기서 시작)
 > 전체는 [[mastery.md]]. 아직 `설명가능`이 아닌 것부터.
-1. 경로 variation x→x+εη에서 속도 x'가 어떻게 변하는지 아직 스스로 설명하지 못함
-2. L과 S의 입력 차이는 교정 후 설명 가능해졌지만, functional variation 계산은 아직 부분 이해
-3. δS=0에서 Euler–Lagrange equation으로 가는 부분적분과 경계항 소거의 논리를 더 확인해야 함
-4. stationary action을 minimum으로 표현하는 습관이 있어 extremum/stationary와 minimum의 차이를 계속 확인할 필요가 있음
-5. Lagrangian L 자체와 action S의 입력 대상 구분은 스스로 바로잡음. S는 x라는 숫자가 아니라 경로 함수 x(t) 전체를 입력으로 받는 functional이라는 표현을 더 엄밀히 할 필요가 있음.
+1. 처음에는 Lagrangian L 자체를 경로의 functional로 혼동했으나, L=L(x, x', t)는 function이고 S[x(t)]가 functional임을 교정함.
+2. Euler-Lagrange 유도에서 x→x+εη일 때 x'→x'+εη'가 되는 이유를 처음에는 설명하지 못했으나 미분으로 확인함.
+3. least action을 반드시 minimum으로 표현하는 경향이 있었고, 실제 조건은 stationary/extremum이라는 점을 보완함.
+4. Euler-Lagrange 유도의 마지막 단계인 '모든 허용 η에 대해 적분이 0이면 integrand가 0'이라는 논리를 직관적으로 설명했지만 엄밀한 수학적 조건은 아직 다루지 않음.
+5. 경로 variation x→x+εη에서 속도 x'가 어떻게 변하는지 아직 스스로 설명하지 못함
 
 ## 다음 복습 질문 (top 5 — 세션 시작 시 1~2개 예측용)
 > 다음 세션에서 다시 물을 것. 러너가 채워 나간다.
-1. x_ε(t)=x(t)+εη(t)라면 \dot{x}_ε(t)는 어떻게 되는가?
-2. δS의 두 항 중 \partial L/\partial \dot{x} 항을 왜 부분적분하는가?
-3. η(t_i)=η(t_f)=0이 경계항을 어떻게 없애는가?
-4. η(t)가 내부에서 임의라는 사실로부터 Euler–Lagrange equation을 어떻게 결론내리는가?
+1. Newtonian mechanics가 local, Lagrangian mechanics가 global하다는 말의 정확한 의미를 설명해봐.
+2. L과 S의 입력이 각각 무엇이며 왜 L은 function, S는 functional인가?
+3. 왜 variation η(t)는 η(t_i)=η(t_f)=0이어야 하는가?
+4. x→x+εη이면 x'는 어떻게 변하는가?
+5. 왜 ∫ f(t)η(t)dt=0이 모든 허용 가능한 η(t)에 대해 성립하면 f(t)=0이어야 하는가?
 
 ## 최근 궤적 (러너가 갱신)
 
@@ -51,7 +52,7 @@ kind: status
 - 2026-08-07 · 양자역학 Chapter 2 — Newtonian vs Lagrangian → [daily/2026-08-07-chapter-2-newtonian-vs-lagrangian.md](daily/2026-08-07-chapter-2-newtonian-vs-lagrangian.md)
 - 2026-08-07 · 양자역학 Chapter 2 — Classical Mechanics → [daily/2026-08-07-chapter-2-classical-mechanics.md](daily/2026-08-07-chapter-2-classical-mechanics.md)
 - 2026-08-07 · 양자역학 Chapter 2 — Classical Mechanics / Lagrangian → [daily/2026-08-07-chapter-2-classical-mechanics-lagrangian.md](daily/2026-08-07-chapter-2-classical-mechanics-lagrangian.md)
-- 2026-08-07 · 양자역학 Chapter 2 — Lagrangian mechanics → [daily/2026-08-07-chapter-2-lagrangian-mechanics-2.md](daily/2026-08-07-chapter-2-lagrangian-mechanics-2.md)
+- 2026-08-07 · 양자역학 Chapter 2 — Lagrangian mechanics → [daily/2026-08-07-chapter-2-lagrangian-mechanics-3.md](daily/2026-08-07-chapter-2-lagrangian-mechanics-3.md)
 
 ## 세션 진행 프로토콜 (러너가 따르는 대본)
 **① 목표 → ② 예측(내가 먼저 자기 말로) → ③ 설명·교정(오개념을 근거와 함께) → ④ 퀴즈/적용 → ⑤ 채점·기록.**
