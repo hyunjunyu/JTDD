@@ -30,29 +30,26 @@ kind: status
 
 ## 지금 약한 것 (top 5 — 세션은 여기서 시작)
 > 전체는 [[mastery.md]]. 아직 `설명가능`이 아닌 것부터.
-1. stationary action을 minimum과 구분해서 표현하기
-2. 경로 variation에서 x→x+εη일 때 xdot→xdot+εηdot 관계를 즉시 떠올리기
-3. L=T-V를 Euler–Lagrange 식에 넣을 때 potential 항의 부호 실수 줄이기
-4. 극좌표에서 p_theta=mr^2 theta_dot의 r^2 계수 정확히 기억하기
-5. cyclic coordinate와 symmetry, conservation law의 연결을 Noether theorem 관점으로 확장하기
+1. q_i를 특정 직교좌표계의 basis로 한정할 필요는 없고 일반화 좌표 generalized coordinate로 보는 것이 더 정확함
+2. L이 '대칭'이라는 표현을 ∂L/∂q_i=0인 cyclic coordinate 조건과 연속변환에 대한 일반적인 Noether symmetry로 구분할 필요가 있음
+3. stationary action을 minimum과 구분해서 표현하기
+4. 경로 variation에서 x→x+εη일 때 xdot→xdot+εηdot 관계를 즉시 떠올리기
+5. L=T-V를 Euler–Lagrange 식에 넣을 때 potential 항의 부호 실수 줄이기
 
 ## 다음 복습 질문 (top 5 — 세션 시작 시 1~2개 예측용)
 > 다음 세션에서 다시 물을 것. 러너가 채워 나간다.
-1. 왜 η(t_i)=η(t_f)=0이어야 하는가?
-2. 왜 모든 허용 가능한 η(t)에 대해 ∫f(t)η(t)dt=0이면 f(t)=0이어야 하는가?
-3. L=1/2 m xdot^2 - V(x)에서 Euler–Lagrange equation이 Newton의 제2법칙을 어떻게 복원하는가?
-4. 극좌표 중심력 문제에서 p_theta는 무엇이며 왜 보존되는가?
-5. L이 theta에 의존하지 않는다는 사실을 rotational symmetry와 angular momentum conservation으로 어떻게 연결할 수 있는가?
+1. 일반화 좌표 q_i가 cyclic coordinate라는 조건을 수식으로 쓰고, Euler–Lagrange equation으로부터 어떤 보존량이 나오는지 설명해보라.
+2. Noether theorem의 symmetry가 단순히 ∂L/∂q_i=0인 경우보다 어떻게 더 일반적인지 설명할 수 있는가?
 
 ## 최근 궤적 (러너가 갱신)
 
-- 2026-08-07 · 양자역학 Chapter 2 — Classical Mechanics / Lagrangian → [daily/2026-08-07-chapter-2-classical-mechanics-lagrangian.md](daily/2026-08-07-chapter-2-classical-mechanics-lagrangian.md)
 - 2026-08-07 · 양자역학 Chapter 2 — Lagrangian mechanics → [daily/2026-08-07-chapter-2-lagrangian-mechanics-4.md](daily/2026-08-07-chapter-2-lagrangian-mechanics-4.md)
 - 2026-08-07 · Shankar Chapter 2 Classical Mechanics → [daily/2026-08-07-shankar-chapter-2-classical-mechanics-2.md](daily/2026-08-07-shankar-chapter-2-classical-mechanics-2.md)
 - 2026-08-07 · Shankar Chapter 2 Classical Mechanics - Lagrangian → [daily/2026-08-07-shankar-chapter-2-classical-mechanics-lagrangian.md](daily/2026-08-07-shankar-chapter-2-classical-mechanics-lagrangian.md)
 - 2026-08-07 · Shankar Chapter 2 — Classical Mechanics 복습 및 이해 점검 → [daily/2026-08-07-shankar-chapter-2-classical-mechanics-5.md](daily/2026-08-07-shankar-chapter-2-classical-mechanics-5.md)
 - 2026-08-07 · Shankar Chapter 2 — Lagrangian Mechanics 기초 이해 점검 → [daily/2026-08-07-shankar-chapter-2-lagrangian-mechanics.md](daily/2026-08-07-shankar-chapter-2-lagrangian-mechanics.md)
 - 2026-08-07 · Shankar Chapter 2 — Lagrangian Mechanics 개념 지도 반영 → [daily/2026-08-07-shankar-chapter-2-lagrangian-mechanics-2.md](daily/2026-08-07-shankar-chapter-2-lagrangian-mechanics-2.md)
+- 2026-08-07 · Shankar Chapter 2 — Symmetry와 Conservation Law → [daily/2026-08-07-shankar-chapter-2-symmetry-conservation-law.md](daily/2026-08-07-shankar-chapter-2-symmetry-conservation-law.md)
 
 ## 세션 진행 프로토콜 (러너가 따르는 대본)
 **① 목표 → ② 예측(내가 먼저 자기 말로) → ③ 설명·교정(오개념을 근거와 함께) → ④ 퀴즈/적용 → ⑤ 채점·기록.**
