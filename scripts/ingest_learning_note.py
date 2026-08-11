@@ -154,6 +154,26 @@ UNDERSTANDING = ("미이해", "부분 이해", "기능적 이해", "비판적 �
 READING_STATUS_SECTION = "READING_STATUS 갱신"
 READING_STATUS_PATH = os.path.join(PAPERS_DIR, "READING_STATUS.md")
 
+# 자료(렉노·교재)의 진도. 논문이 `papers/READING_STATUS.md`로 하던 것과 **같은 기계**다 —
+# 세션 노트에 절을 하나 남기면 CI가 파일에 옮겨 적는다.
+#
+# 왜 필요한가: 원문을 절 단위로 읽게 되면서 "오늘 어느 절부터인가"가 세션의 첫 물음이 됐다.
+# 기록이 없으면 러너가 daily 노트에서 짐작해야 하고, 짐작이 틀리면 이미 한 절을 또 한다.
+MATERIAL_STATUS_SECTION = "자료 진도 갱신"
+MATERIAL_STATUS_PATH = os.path.join(MATERIALS_DIR, "READING_STATUS.md")
+
+# 학습 설계도 — **순서의 SSOT.** `mode: topdown`이 목표 한 줄에서 큰 그림→개념 분해→순서
+# →검증기준으로 경로를 만든다. 논문도 자료도 파킹랏도 없는 사람의 시작점이 이 파일이다.
+#
+# 우선순위는 `PARKING-LOT.md`가 이미 정해 두었다 — *"학습 설계도의 순서는 근거를 가진
+# 가설이고, 큐는 그것을 보조한다."* 설계도=주 · 파킹랏=보조 · `courses/`=재료.
+#
+# 왜 여기 오는가(2026-08-10): 이 파일이 `git add` 범위에 없어서 **손으로만 갱신됐다.**
+# 그래서 `[다음]`·`[완료]` 표시가 세션이 진행돼도 움직이지 않았다. 자료 진도(위)와 같은
+# 기계를 그대로 쓴다 — 절을 하나 남기면 CI가 파일에 옮겨 적는다.
+LEARNING_SPEC_SECTION = "학습 설계도"
+LEARNING_SPEC_PATH = "learning-spec.md"
+
 # ─────────────────────────── 설정 (`[설정]`) ───────────────────────────
 #
 # 2026-08-04: `topics.yaml`을 사람이 손으로 쓰게 하는 것이 병목이었다. YAML 문법이
@@ -406,6 +426,30 @@ def ensure_headings(body):
     return body, missing
 
 
+def pop_directives(body, allowed):
+    """본문 맨 앞의 `key: value` 지시행을 떼어낸다 → (지시 dict, 남은 본문).
+
+    앱이 만든 초안은 frontmatter 울타리(`---`) 없이 `slug: …`처럼 맨 윗줄에 적는다.
+    세션 노트(`build_note`)가 쓰던 관례와 같은 것이라 여기 모아 둘이 함께 쓴다.
+    """
+    out, lines = {}, (body or "").splitlines()
+    pattern = r"^(%s)\s*:\s*\S" % "|".join(allowed)
+    while lines and re.match(pattern, lines[0].strip()):
+        key, value = lines[0].split(":", 1)
+        out[key.strip()] = value.strip()
+        lines.pop(0)
+    return out, "\n".join(lines).strip()
+
+
+def source_toc(source_body):
+    """원문의 `### ` 제목 목록. 증류본에 실어 **어느 절을 열지 고르는 지도**로 쓴다.
+
+    `get_state`에 담지 않는 이유: 그러면 자료 수만큼 원문을 통째로 받아야 해서 세션
+    시작이 느려진다. CI는 자료를 가를 때 이미 원문을 손에 들고 있으므로 여기서는 공짜다.
+    """
+    return [m.group(1).strip() for m in re.finditer(r"^###\s+(\S.*)$", source_body or "", re.M)]
+
+
 def existing_material_slug(number):
     """이 Issue로 이미 만든 자료의 slug. 없으면 None.
 
@@ -470,11 +514,16 @@ def build_material(payload, today):
     """
     raw = assemble(payload)
     user_fm, body = split_frontmatter(raw)
+    directives, body = pop_directives(body, ("slug", "paper"))
+    user_fm = {**directives, **user_fm}
     title = payload.get("title") or ""
     head, _, tail = title.partition("—")
     if not tail:
         head, _, tail = title.partition(" - ")
-    slug = user_fm.get("slug") or slugify(head) or f"material-{payload.get('number', '0')}"
+    # `paper:`가 있으면 논문 한 편의 저장소로 간다 — 그 논문의 것은 그 논문 폴더에.
+    paper_slug = (user_fm.get("paper") or "").strip()
+    root = PAPERS_DIR if paper_slug else MATERIALS_DIR
+    slug = paper_slug or user_fm.get("slug") or slugify(head) or f"material-{payload.get('number', '0')}"
     display = (tail or head).strip()
     display = re.sub(r"^\s*\[[^\]]*\]\s*", "", display).strip()
     display = re.sub(r"^\d{4}-\d{2}-\d{2}\s*", "", display).strip() or slug
@@ -499,25 +548,57 @@ def build_material(payload, today):
             text = f"# {display}\n\n" + text
         return frontmatter(tag, source_line) + "\n\n" + text.rstrip() + "\n"
 
-    # 증류가 실제로 있을 때만 폴더형으로 나눈다. 증류가 없으면 나눌 것이 하나뿐이라
-    # 빈 `distilled.md`를 만드는 대신 지금까지처럼 단일 파일로 둔다(경로 계약은 둘 다 허용).
-    if distilled and source_body is not None:
+    # 폴더형으로 가르는 때: **원문 경계가 있으면 언제나.** 논문은 `papers/<slug>/`가 이미
+    # 폴더 규약이라 경계가 없어도 폴더다.
+    #
+    # 증류 성공 여부로 가르지 않는다(유지훈 2026-08-10: *"원본도 내가 분명히 그냥 저장하자고
+    # 했었는데 — GPT가 효율적으로 읽고 토큰 절감시킨다고 증류가 목적이지"*). 증류는 러너의
+    # 토큰을 아끼는 **길잡이**이고 원문은 인용 근거다. 길잡이를 못 만들었다고 원문이 있을
+    # 자리가 바뀌면, 앱이 약속한 `<root>/<slug>/source.md`가 거짓이 되고
+    # `read_doc`이 404를 돌려준다 — 러너가 도구를 버리게 만드는 바로 그 실패다.
+    #
+    # 그래도 빈 `distilled.md`는 만들지 않는다(아래) — 그 빈 껍데기에 `distilled` 딱지가
+    # 붙는 것이 이 경로가 고쳐 온 거짓말이다. 없는 파일은 `listMaterials`가 이미 견딘다.
+    folder = bool(paper_slug) or source_body is not None
+    if not folder:
         return {
-            "slug": slug,
-            "distilled": True,
-            "content": page(head, "distilled", "자료 증류"),
-            "source": page(source_body, "source", "원문 텍스트 (그대로 보존)"),
+            "slug": slug, "root": root, "distilled": distilled, "files": None,
+            "flat": page(
+                body,
+                "distilled" if distilled else "raw",
+                "자료 증류" if distilled else "원문 텍스트 (증류 없음)",
+            ),
         }
-    return {
-        "slug": slug,
-        "distilled": distilled,
-        "content": page(
+
+    files = {}
+    if source_body is not None:
+        if distilled:
+            files["source.md"] = page(source_body, "source", "원문 텍스트 (그대로 보존)")
+            # 목차를 증류본에 실어 준다 — 러너는 어차피 증류본을 길잡이로 읽는다.
+            toc = source_toc(source_body)
+            body_with_toc = head if not toc else head.rstrip() + "\n\n" + "\n".join(
+                ["## 원문 목차", "",
+                 "> `read_doc`에 `section`으로 이 이름을 그대로 넘기면 그 절의 원문만 받는다.",
+                 ""] + [f"- {t}" for t in toc]
+            )
+            files["distilled.md"] = page(body_with_toc, "distilled", "자료 증류")
+        else:
+            # 증류가 없으면 `distilled.md`를 만들지 않는다. 그러면 머리말(메타 + 러너에게
+            # 남길 일)이 갈 곳이 없으므로 원문 앞에 둔다 — 버리면 "무엇을 왜 올렸나"가
+            # 사라지고, 경계가 아예 없는 경우(아래 else)와도 모양이 어긋난다.
+            files["source.md"] = page(
+                f"{head.rstrip()}\n\n{source_body}" if head.strip() else source_body,
+                "source",
+                "원문 텍스트 (증류 없음)",
+            )
+    else:
+        # 경계가 없다 = 통째로 증류본이거나 통째로 원문이다.
+        files["distilled.md" if distilled else "source.md"] = page(
             body,
-            "distilled" if distilled else "raw",
+            "distilled" if distilled else "source",
             "자료 증류" if distilled else "원문 텍스트 (증류 없음)",
-        ),
-        "source": None,
-    }
+        )
+    return {"slug": slug, "root": root, "distilled": distilled, "files": files, "flat": None}
 
 
 def build_note(payload, today):
@@ -535,6 +616,9 @@ def build_note(payload, today):
     user_fm = {**directives, **user_fm}
 
     body, status_patch = extract_status_patch(body)
+    body, material_patch = extract_status_patch(body, MATERIAL_STATUS_SECTION)
+    # 세션이 한 단계를 통과했으면 `[다음]` → `[완료]`가 여기로 온다.
+    body, spec_patch = extract_status_patch(body, LEARNING_SPEC_SECTION)
     body, mastery = pop_section(body, MASTERY_SECTION)
     body, drills = pop_section(body, DRILLS_SECTION)
     body, missing = ensure_headings(body)
@@ -588,6 +672,8 @@ def build_note(payload, today):
         "slug": slug,
         "content": "\n".join(fm) + "\n\n" + body.rstrip() + "\n",
         "status_patch": status_patch,
+        "material_patch": material_patch,
+        "spec_patch": spec_patch,
         "mastery": mastery,
         "drills": drills,
         "track": user_fm.get("track", ""),
@@ -1185,6 +1271,88 @@ kind: reading-status
 - (다음 세션의 시작점 한 줄)
 """
 
+MATERIAL_STATUS_TEMPLATE = """---
+title: "자료 진도 — 어느 자료 어느 절까지"
+updated: {today}
+kind: reading-status
+---
+
+# 자료 진도
+
+> 렉처노트·교재를 이어 읽을 때 러너가 먼저 읽는 파일.
+> 세션이 끝나면 Issue의 `## 자료 진도 갱신` 절로 갱신된다.
+> 절 이름은 그 자료 증류본의 `## 원문 목차`에 있는 것을 그대로 쓴다.
+
+## Progress
+
+- (아직 없음)
+
+## Next Session
+
+- (다음 세션에 열 자료와 절 한 줄)
+"""
+
+# 절 이름은 실제 설계도(`mode: topdown`)의 것과 같아야 한다 — `apply_section_patch`가
+# 이 제목들을 찾아 본문을 통째로 교체하기 때문이다. 없는 절에 보낸 패치는 조용히 버려진다.
+LEARNING_SPEC_TEMPLATE = """---
+title: "학습 설계도"
+updated: {today}
+kind: learning-spec
+mode: topdown
+---
+
+# 학습 설계도
+
+> **순서의 SSOT.** 실라버스가 없어도 **목표 한 줄**에서 큰 그림 → 개념 분해 → 순서 →
+> 검증 기준으로 경로를 만든다. 논문·자료·Parking Lot이 아직 없어도 여기서 시작한다.
+>
+> **철칙**: 아래 경로는 확정이 아니라 **검증 대상 가설**이다 — 배우면서 교정한다.
+> 세션이 끝나면 Issue의 `## 학습 설계도` 절로 갱신된다(손으로 고치지 않는다).
+>
+> Parking Lot은 이 순서를 **보조**한다 — 논문을 읽다 막힌 개념을 여기 순서에 끼워 넣는다.
+
+## 학습 목표 — 무엇을 할 줄 알게 되는가
+
+- (이 학습이 끝나면 나는 ___를 스스로 설명/수행할 수 있다)
+
+## 큰 그림 (why & 전체 지형)
+
+- (아직 없음 — 목표 한 줄을 러너에게 주면 여기서부터 만든다)
+
+## 학습 경로 (단계·마일스톤)
+
+> `[완료]`는 실측 기록으로 확인된 단계, `[다음]`은 생성된 가설 경로.
+> **왜 이 순서인지**(선수 개념)를 각 행에 남긴다.
+
+| 단계 | 주제 | 왜 이 순서 (선수 개념) | 검증 기준 (무엇을 설명할 수 있으면 통과) |
+|---|---|---|---|
+| 1 `[다음]` | (첫 단계) | (진입점) | (무엇을 설명하면 통과인가) |
+
+## 검증 / 도전
+
+- (각 단계를 통과했다고 볼 근거 — 반박을 견딘 설명)
+
+## 생성 근거 & 반증
+
+- (이 경로를 왜 이렇게 짰나. 배우면서 틀린 것이 나오면 여기 적고 위 표를 고친다)
+"""
+
+
+def ensure_learning_spec(today):
+    return ensure_status_file(LEARNING_SPEC_PATH, LEARNING_SPEC_TEMPLATE, today)
+
+
+def apply_learning_spec(patch, today):
+    """`## 학습 설계도` 절 → `learning-spec.md`. 없으면 견본을 먼저 만든다.
+
+    자료 진도(`MATERIAL_STATUS_PATH`)와 **같은 기계**다 — `apply_section_patch`가 이미
+    경로를 받으므로 새 코드가 아니라 호출 하나다.
+    """
+    if not patch:
+        return []
+    ensure_learning_spec(today)
+    return apply_section_patch(patch, today, path=LEARNING_SPEC_PATH)
+
 
 def build_topics(payload):
     """`[설정]` Issue의 `## 주제` 절 → [{id, label, query, seed, …}].
@@ -1620,14 +1788,22 @@ def merge_topics(new, path=TOPICS_PATH):
     return added, updated, removed
 
 
-def ensure_reading_status(today):
+def ensure_status_file(path, template, today):
     """없으면 만든다 — 있으면 손대지 않는다(학습자의 기록이다)."""
-    if os.path.exists(READING_STATUS_PATH):
+    if os.path.exists(path):
         return False
-    os.makedirs(PAPERS_DIR, exist_ok=True)
-    with open(READING_STATUS_PATH, "w", encoding="utf-8") as f:
-        f.write(READING_STATUS_TEMPLATE.format(today=today))
+    os.makedirs(os.path.dirname(path) or ".", exist_ok=True)
+    with open(path, "w", encoding="utf-8") as f:
+        f.write(template.format(today=today))
     return True
+
+
+def ensure_reading_status(today):
+    return ensure_status_file(READING_STATUS_PATH, READING_STATUS_TEMPLATE, today)
+
+
+def ensure_material_status(today):
+    return ensure_status_file(MATERIAL_STATUS_PATH, MATERIAL_STATUS_TEMPLATE, today)
 
 
 # --------------------------------------------------------------------------- main
@@ -1686,6 +1862,40 @@ def main():
 
     # `[설정]` — 학습 기록이 아니라 설정 파일(topics.yaml)의 쓰기 경로다.
     if (payload.get("title") or "").startswith("[설정]"):
+        # 학습 설계도 — **새 사용자의 첫 파일.** 목표 한 줄에서 러너가 경로를 만들어
+        # 승인받은 뒤 이 절로 보낸다. 세션 기록이 아니므로 `[설정]`이 맞는 자리다.
+        _, spec_patch = extract_status_patch(assemble(payload), LEARNING_SPEC_SECTION)
+        if spec_patch:
+            if args.dry_run:
+                print(f"[dry-run] {LEARNING_SPEC_PATH}\n")
+                print(json.dumps(spec_patch, ensure_ascii=False, indent=2))
+                return
+            created = not os.path.exists(LEARNING_SPEC_PATH)
+            spec_applied = apply_learning_spec(spec_patch, args.today)
+            report = [
+                f"✅ 학습 설계도 {'생성' if created else '갱신'} — `{LEARNING_SPEC_PATH}`",
+                "",
+            ]
+            if spec_applied:
+                report.append(f"- 갱신된 절: {', '.join(spec_applied)}")
+            skipped = [k for k in spec_patch if k not in spec_applied]
+            if skipped:
+                # 없는 절에 보낸 패치는 조용히 버려진다 — 그것을 말한다.
+                report.append(
+                    f"- ⚠️ 설계도에 없는 절이라 건너뜀: {', '.join(skipped)} "
+                    "(견본의 절 이름을 그대로 쓴다)"
+                )
+            report += [
+                "",
+                "> 이 순서가 앞으로 모든 과목 세션의 시작점이다. Parking Lot은 이 순서를 **보조**한다.",
+            ]
+            text = "\n".join(report)
+            print(text)
+            if args.report:
+                with open(args.report, "w", encoding="utf-8") as f:
+                    f.write(text + "\n")
+            return
+
         # 트랙(학습 서랍)과 주제(논문 수집)는 같은 `[설정]` Issue로 온다 — 둘 다 설정이고,
         # 사용자에게 "이건 어느 Issue로 쓰지"를 고르게 하지 않는다.
         tracks = build_tracks(payload)
@@ -1810,21 +2020,22 @@ def main():
     # `[자료]` — 세션 로그가 아니라 증류된 학습자료다. 별도 경로로 저장하고 끝낸다.
     if (payload.get("title") or "").startswith("[자료]"):
         note = build_material(payload, args.today)
-        slug = existing_material_slug(payload.get("number")) or note["slug"]
+        root = note["root"]
+        # 논문은 slug가 지시행으로 못박혀 있다(그 논문 폴더에 들어가야 한다).
+        slug = note["slug"] if root == PAPERS_DIR else (
+            existing_material_slug(payload.get("number")) or note["slug"]
+        )
 
-        if note["source"] is not None:
+        if note["files"] is not None:
             # 폴더형 — 증류와 원문을 나눈다. 경로 계약은 Topdown `materialPaths.ts`의
             # `MATERIAL_RE`가 이미 허용한다(`materials/<slug>/(source|distilled).md`).
-            folder = os.path.join(MATERIALS_DIR, slug)
-            writes = [
-                (os.path.join(folder, "distilled.md"), note["content"]),
-                (os.path.join(folder, "source.md"), note["source"]),
-            ]
+            folder = os.path.join(root, slug)
+            writes = [(os.path.join(folder, name), c) for name, c in sorted(note["files"].items())]
             # 같은 자료가 전에 단일 파일로 저장돼 있었다면 지운다. 남겨 두면 같은 개념
             # 지도가 두 번 읽혀 그래프에 중복 간선이 생긴다(빌더는 materials/**를 다 본다).
-            stale = os.path.join(MATERIALS_DIR, f"{slug}.md")
+            stale = os.path.join(root, f"{slug}.md")
         else:
-            writes = [(os.path.join(MATERIALS_DIR, f"{slug}.md"), note["content"])]
+            writes = [(os.path.join(root, f"{slug}.md"), note["flat"])]
             stale = None
 
         if args.dry_run:
@@ -1840,16 +2051,25 @@ def main():
             os.remove(stale)
 
         path = writes[0][0]
-        lines = len(note["content"].splitlines())
-        if note["source"] is not None:
-            src_lines = len(note["source"].splitlines())
+        saved = " · ".join(f"`{p}` ({len(c.splitlines())}줄)" for p, c in writes)
+        if note["files"] and len(writes) > 1:
             report = [
-                f"✅ 자료 저장 — 증류 `{path}` ({lines}줄) · 원문 `{writes[1][0]}` ({src_lines}줄)",
+                f"✅ 자료 저장 — {saved}",
                 "",
                 "- 요약·개념 지도·빈칸 문제 은행이 증류본에 있다 — `## 개념 지도`는 그래프로 간다.",
-                "- 원문은 그대로 보존됐다 — 인용 근거이고, 러너가 `read_doc`으로 읽을 수 있다.",
+                "- 증류본의 `## 원문 목차`에서 절을 고르고 "
+                "`read_doc`의 `section`으로 그 절의 원문만 읽는다.",
+                "- 원문은 그대로 보존됐다 — 인용 근거이고, 러너가 읽을 수 있다.",
+            ]
+        elif note["files"] and not note["distilled"]:
+            report = [
+                f"✅ 원문 저장 — {saved}",
+                "",
+                "- ⚠️ **증류는 없다** — `## 개념 지도`가 없어 그래프에 들어가는 것은 없다.",
+                "- 원문은 그대로 보존됐다. 러너가 `read_doc`으로 절 단위로 읽을 수 있다.",
             ]
         elif note["distilled"]:
+            lines = len(writes[0][1].splitlines())
             report = [
                 f"✅ 자료 지도 저장 — `{path}` ({lines}줄)",
                 "",
@@ -1860,7 +2080,7 @@ def main():
             # 증류를 대신 해 주지 않는다(이 CI는 LLM 토큰 0이 원칙이다). 대신 무엇이 저장됐고
             # 무엇이 없는지 정확히 말한다 — 라벨과 보고가 어긋나면 저작권 판단까지 오도한다.
             report = [
-                f"✅ 자료 원문 저장 — `{path}` ({lines}줄)",
+                f"✅ 자료 원문 저장 — `{path}` ({len(writes[0][1].splitlines())}줄)",
                 "",
                 "- ⚠️ **증류는 없다** — `## 개념 지도`가 없어 `tags: [material, raw]`로 적었다.",
                 "  그래프에 들어가는 것은 없다(선수관계는 `## 개념 지도`에서만 읽는다).",
@@ -1903,6 +2123,15 @@ def main():
     with open(path, "w", encoding="utf-8") as f:
         f.write(note["content"])
     applied = apply_status_patch(note["status_patch"], args.today)
+    # 자료 진도 — 논문의 READING_STATUS와 같은 기계다(절 교체). 절이 없으면 아무 일도 없다.
+    # `applied`에 섞지 않는다 — 섞으면 보고가 "STATUS.md 갱신"이라고 거짓말한다.
+    material_applied = []
+    if note["material_patch"]:
+        ensure_material_status(args.today)
+        material_applied = apply_section_patch(
+            note["material_patch"], args.today, path=MATERIAL_STATUS_PATH
+        )
+    spec_applied = apply_learning_spec(note["spec_patch"], args.today)
     if append_trajectory(note["display"], note["date"], path, args.today):
         applied.append(TRAJECTORY_SECTION)
     promoted = write_mastery_fragment(note["mastery"], note["track"], note["date"], note["slug"], path)
@@ -1920,6 +2149,14 @@ def main():
         report.append(f"- {track_note}")
     if applied:
         report.append(f"- STATUS.md 갱신: {', '.join(applied)}")
+    if material_applied:
+        report.append(
+            f"- 자료 진도 갱신: `{MATERIAL_STATUS_PATH}` — {', '.join(material_applied)}"
+        )
+    if spec_applied:
+        report.append(
+            f"- 학습 설계도 갱신: `{LEARNING_SPEC_PATH}` — {', '.join(spec_applied)}"
+        )
     if promoted:
         report.append(f"- 이해도 승급 조각: `{promoted}`" if promoted.endswith(".md") else f"- {promoted}")
     if drilled:
